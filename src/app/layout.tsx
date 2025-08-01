@@ -45,10 +45,10 @@ export default async function RootLayout({
   let siteName = process.env.SITE_NAME || 'szAiTV';
   let announcement =
     process.env.ANNOUNCEMENT ||
-    '欢迎使用 色者AI私人影院。在开始使用前，请您了解并同意以下条款：
-服务性质： 本影院 仅提供视频搜索服务，不直接提供存储或上传任何视频内容，所有搜索结果均来自第三方公开接口，无偿献给粉丝福利，不得透露网站和密码外人使用。
-用户责任： 用户使用时须遵守相关法律法规，不得利用搜索结果从事侵权行为，如下载、传播、售卖未经授权的作品等，如触犯相关法律法规您自行承担与本站无关。
-广告风险提示： 本站所有视频均来自第三方采集站，视频中出现的广告与本站无关，请勿相信或点击视频中的任何广告内容，谨防上当受骗。';
+    "欢迎使用 色者AI私人影院。在开始使用前，请您了解并同意以下条款\n"
+"服务性质： 本影院 仅提供视频搜索服务，不直接提供存储或上传任何视频内容，所有搜索结果均来自第三方公开接口，无偿献给粉丝福利，不得透露网站和密码外人使用\n"
+"用户责任： 用户使用时须遵守相关法律法规，不得利用搜索结果从事侵权行为，如下载、传播、售卖未经授权的作品等，如触犯相关法律法规您自行承担与本站无关\n"
+"广告风险提示： 本站所有视频均来自第三方采集站，视频中出现的广告与本站无关，请勿相信或点击视频中的任何广告内容，谨防上当受骗"
   let enableRegister = process.env.NEXT_PUBLIC_ENABLE_REGISTER === 'true';
   let imageProxy = process.env.NEXT_PUBLIC_IMAGE_PROXY || '';
   let doubanProxy = process.env.NEXT_PUBLIC_DOUBAN_PROXY || '';
