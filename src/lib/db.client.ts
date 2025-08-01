@@ -57,12 +57,12 @@ interface UserCacheStore {
 }
 
 // ---- 常量 ----
-const PLAY_RECORDS_KEY = 'szAiTV_play_records';
-const FAVORITES_KEY = 'szAiTV_favorites';
-const SEARCH_HISTORY_KEY = 'szAiTV_search_history';
+const PLAY_RECORDS_KEY = 'moontv_play_records';
+const FAVORITES_KEY = 'moontv_favorites';
+const SEARCH_HISTORY_KEY = 'moontv_search_history';
 
 // 缓存相关常量
-const CACHE_PREFIX = 'szAiTV_cache_';
+const CACHE_PREFIX = 'moontv_cache_';
 const CACHE_VERSION = '1.0.0';
 const CACHE_EXPIRE_TIME = 60 * 60 * 1000; // 一小时缓存过期
 
@@ -1353,7 +1353,7 @@ export async function getSkipConfig(
 
   // localStorage 模式
   try {
-    const raw = localStorage.getItem('szAiTV_skip_configs');
+    const raw = localStorage.getItem('moontv_skip_configs');
     if (!raw) return null;
     const configs = JSON.parse(raw) as Record<string, SkipConfig>;
     return configs[key] || null;
@@ -1411,10 +1411,10 @@ export async function saveSkipConfig(
   }
 
   try {
-    const raw = localStorage.getItem('szAiTV_skip_configs');
+    const raw = localStorage.getItem('moontv_skip_configs');
     const configs = raw ? (JSON.parse(raw) as Record<string, SkipConfig>) : {};
     configs[key] = config;
-    localStorage.setItem('szAiTV_skip_configs', JSON.stringify(configs));
+    localStorage.setItem('moontv_skip_configs', JSON.stringify(configs));
     window.dispatchEvent(
       new CustomEvent('skipConfigsUpdated', {
         detail: configs,
@@ -1478,7 +1478,7 @@ export async function getAllSkipConfigs(): Promise<Record<string, SkipConfig>> {
 
   // localStorage 模式
   try {
-    const raw = localStorage.getItem('szAiTV_skip_configs');
+    const raw = localStorage.getItem('moontv_skip_configs');
     if (!raw) return {};
     return JSON.parse(raw) as Record<string, SkipConfig>;
   } catch (err) {
@@ -1533,11 +1533,11 @@ export async function deleteSkipConfig(
   }
 
   try {
-    const raw = localStorage.getItem('szAiTV_skip_configs');
+    const raw = localStorage.getItem('moontv_skip_configs');
     if (raw) {
       const configs = JSON.parse(raw) as Record<string, SkipConfig>;
       delete configs[key];
-      localStorage.setItem('szAiTV_skip_configs', JSON.stringify(configs));
+      localStorage.setItem('moontv_skip_configs', JSON.stringify(configs));
       window.dispatchEvent(
         new CustomEvent('skipConfigsUpdated', {
           detail: configs,
