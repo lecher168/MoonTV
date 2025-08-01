@@ -16,7 +16,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 // 动态生成 metadata，支持配置更新后的标题变化
 export async function generateMetadata(): Promise<Metadata> {
-  let siteName = process.env.SITE_NAME || '色者AI私人影院';
+  let siteName = process.env.SITE_NAME || 'szAiTV';
   if (
     process.env.NEXT_PUBLIC_STORAGE_TYPE !== 'd1' &&
     process.env.NEXT_PUBLIC_STORAGE_TYPE !== 'upstash'
@@ -42,7 +42,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let siteName = process.env.SITE_NAME || '色者AI私人影院';
+  let siteName = process.env.SITE_NAME || 'szAiTV';
   let announcement =
     process.env.ANNOUNCEMENT ||
     '欢迎使用 色者AI私人影院。在开始使用前，请您了解并同意以下条款：
