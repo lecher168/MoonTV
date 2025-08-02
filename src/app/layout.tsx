@@ -58,6 +58,39 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+    return (
+    <html lang='zh-CN' suppressHydrationWarning>
+      <Head>
+        {/* 添加 Apple Touch Icon 配置 */}
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="167x167" href="/apple-touch-icon.png" />
+        
+        {/* PWA 相关标签 */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="色者AI" />
+        
+        {/* 原有标签 */}
+        <meta
+          name='viewport'
+          content='width=device-width, initial-scale=1.0, viewport-fit=cover'
+        />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        
+        {/* 运行时配置脚本 */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.RUNTIME_CONFIG = ${JSON.stringify(runtimeConfig)};`,
+          }}
+        />
+      </Head>
+      {/* 其余代码保持不变 ... */}
+    </html>
+  );
+}
   let siteName = process.env.SITE_NAME || '色者AI私人影院';
   let announcement =
     process.env.ANNOUNCEMENT ||
