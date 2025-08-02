@@ -104,7 +104,7 @@ export default async function RootLayout({
   };
 
   return (
-    <html lang='zh-CN' suppressHydrationWarning>
+    <html lang='zh-CN' suppressHydrationWarning className="h-full">
       <head>
         <meta
           name='viewport'
@@ -123,7 +123,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${inter.className} min-h-screen bg-white text-gray-900 dark:bg-black dark:text-gray-200`}
+        className={`${inter.className} min-h-screen bg-white text-gray-900 dark:bg-black dark:text-gray-200 flex flex-col`}
       >
         <ThemeProvider
           attribute='class'
@@ -132,25 +132,59 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <SiteProvider siteName={siteName} announcement={announcement}>
-            {children}
+            {/* 添加flex-grow确保内容区域扩展 */}
+            <div className="flex-grow">
+              {children}
+            </div>
+            
+            {/* 确保按钮在移动设备上始终可见 */}
+            <div className="fixed bottom-4 right-4 z-[999]">
+              <a
+                href="https://sezheai.com"
+                className="inline-flex items-center justify-center px-3 py-1.5 text-sm sm:px-4 sm:py-2 bg-gradient-to-r from-[#5e60ce] to-[#4361ee] hover:from-[#4e50c0] hover:to-[#3a56e0] text-white font-medium rounded-lg transition-all duration-300 transform scale-90 hover:scale-95"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {/* 使用 48x48 的 favicon 作为按钮图标 */}
+                <img
+                  src="/favicon-48x48.ico"
+                  alt="色者AI"
+                  className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2"
+                />
+                <span className="text-xs sm:text-sm">更多学习分享：@色者AI</span>
+              </a>
+            </div>
           </SiteProvider>
-          <div className="fixed bottom-4 right-4 z-50">
-            <a
-              href="https://sezheai.com"
-              className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-[#5e60ce] to-[#4361ee] hover:from-[#4e50c0] hover:to-[#3a56e0] text-white font-medium rounded-lg transition-all duration-300 transform scale-90 hover:scale-95"
-              target="_blank"
-              rel="noopener"
-            >
-              {/* 使用 48x48 的 favicon 作为按钮图标 */}
-              <img
-                src="/favicon-48x48.ico"
-                alt="色者AI"
-                className="w-5 h-5 mr-2"
-              />
-              <span>更多学习分享：@色者AI</span>
-            </a>
-          </div>
         </ThemeProvider>
+        
+        {/* 添加关键CSS修复移动端布局 */}
+        <style jsx global>{`
+          html, body, #__next {
+            height: 100%;
+            position: relative;
+            overflow-x: hidden;
+          }
+          
+          /* 确保内容区域可滚动 */
+          .flex-grow {
+            min-height: calc(100vh - 4rem); /* 为按钮留出空间 */
+            padding-bottom: 5rem; /* 防止内容被按钮遮挡 */
+          }
+          
+          /* 修复移动端键盘弹出时的问题 */
+          @media (max-width: 768px) {
+            body {
+              position: fixed;
+              width: 100%;
+            }
+            
+            .fixed {
+              position: fixed !important;
+              bottom: env(safe-area-inset-bottom, 16px) !important;
+              right: max(16px, env(safe-area-inset-right, 16px)) !important;
+            }
+          }
+        `}</style>
       </body>
     </html>
   );
