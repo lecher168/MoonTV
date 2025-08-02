@@ -2,6 +2,7 @@
 
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import Head from 'next/head'; // 添加 Head 组件
 
 import './globals.css';
 import 'sweetalert2/dist/sweetalert2.min.css';
@@ -105,23 +106,33 @@ export default async function RootLayout({
 
   return (
     <html lang='zh-CN' suppressHydrationWarning>
-      <head>
+      <Head>
+        {/* 添加 Apple Touch Icon 配置 - 多个尺寸确保兼容性 */}
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon.png?v=2" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
+        <link rel="apple-touch-icon" sizes="167x167" href="/apple-touch-icon.png?v=2" />
+        
+        {/* PWA 相关标签 - 确保添加到主屏幕时正确显示 */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="色者AI" />
+        
+        {/* 原有标签 */}
         <meta
           name='viewport'
           content='width=device-width, initial-scale=1.0, viewport-fit=cover'
         />
-        {/* 显式添加 favicon 链接确保兼容性 */}
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         
-        {/* 将配置序列化后直接写入脚本 */}
+        {/* 运行时配置脚本 */}
         <script
           dangerouslySetInnerHTML={{
             __html: `window.RUNTIME_CONFIG = ${JSON.stringify(runtimeConfig)};`,
           }}
         />
-      </head>
+      </Head>
       <body
         className={`${inter.className} min-h-screen bg-white text-gray-900 dark:bg-black dark:text-gray-200`}
       >
