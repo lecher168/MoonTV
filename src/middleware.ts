@@ -119,12 +119,12 @@ function handleAuthFailure(
 function shouldSkipAuth(pathname: string): boolean {
   const skipPaths = [
     '/_next',
-    '/favicon1.ico',
+    '/favicon.ico',
     '/robots.txt',
     '/manifest.json',
     '/icons/',
     '/logo.png',
-    '/logo.png',
+    '/screenshot.png',
   ];
 
   return skipPaths.some((path) => pathname.startsWith(path));
@@ -133,6 +133,6 @@ function shouldSkipAuth(pathname: string): boolean {
 // 配置middleware匹配规则
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon1.ico|login|warning|api/login|api/register|api/logout|api/cron|api/server-config).*)',
+    '/((?!_next/static|_next/image|favicon.ico|login|warning|api/login|api/register|api/logout|api/cron|api/server-config).*)',
   ],
 };
