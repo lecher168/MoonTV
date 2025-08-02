@@ -29,6 +29,12 @@ export async function generateMetadata(): Promise<Metadata> {
     title: siteName,
     description: '影视聚合',
     manifest: '/manifest.json',
+    // 添加 favicon 配置
+    icons: {
+      icon: '/favicon.ico', // 默认图标
+      shortcut: '/favicon.ico', // 快捷方式图标
+      apple: '/favicon.ico', // Apple 设备图标（也可单独提供）
+    },
   };
 }
 
