@@ -29,11 +29,21 @@ export async function generateMetadata(): Promise<Metadata> {
     title: siteName,
     description: '影视聚合',
     manifest: '/manifest.json',
-    // 添加 favicon 配置
+    // 配置多尺寸 favicon
     icons: {
-      icon: '/favicon.ico', // 默认图标
-      shortcut: '/favicon.ico', // 快捷方式图标
-      apple: '/favicon.ico', // Apple 设备图标（也可单独提供）
+      icon: [
+        { url: '/favicon-16x16.ico', sizes: '16x16', type: 'image/x-icon' },
+        { url: '/favicon-32x32.ico', sizes: '32x32', type: 'image/x-icon' },
+        { url: '/favicon-48x48.ico', sizes: '48x48', type: 'image/x-icon' },
+        { url: '/favicon-64x64.ico', sizes: '64x64', type: 'image/x-icon' },
+      ],
+      apple: [
+        { 
+          url: '/apple-touch-icon.png', 
+          sizes: '180x180', 
+          type: 'image/png' 
+        }
+      ],
     },
   };
 }
@@ -100,8 +110,12 @@ export default async function RootLayout({
           name='viewport'
           content='width=device-width, initial-scale=1.0, viewport-fit=cover'
         />
-        {/* 将配置序列化后直接写入脚本，浏览器端可通过 window.RUNTIME_CONFIG 获取 */}
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        {/* 显式添加 favicon 链接确保兼容性 */}
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        
+        {/* 将配置序列化后直接写入脚本 */}
         <script
           dangerouslySetInnerHTML={{
             __html: `window.RUNTIME_CONFIG = ${JSON.stringify(runtimeConfig)};`,
@@ -120,15 +134,16 @@ export default async function RootLayout({
           <SiteProvider siteName={siteName} announcement={announcement}>
             {children}
           </SiteProvider>
-           <div className="fixed bottom-4 right-4 z-50">
+          <div className="fixed bottom-4 right-4 z-50">
             <a
               href="https://sezheai.com"
               className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-[#5e60ce] to-[#4361ee] hover:from-[#4e50c0] hover:to-[#3a56e0] text-white font-medium rounded-lg transition-all duration-300 transform scale-90 hover:scale-95"
               target="_blank"
               rel="noopener"
             >
+              {/* 使用 48x48 的 favicon 作为按钮图标 */}
               <img
-                src="image/httpstc.szai.us.kgfileAgACAgUAAyEGAASluQg5AAMEaG6HUjXIz2VBLlEhhdr53n5gkZoAAo_HMRuzj3BXhZ1ImJcJS6kBAAMCAANtAAM2BA.png"
+                src="/favicon-48x48.ico"
                 alt="色者AI"
                 className="w-5 h-5 mr-2"
               />
