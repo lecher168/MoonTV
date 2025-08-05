@@ -60,7 +60,7 @@ export async function generateMetadata(): Promise<Metadata> {
 function buildMetadata(siteName: string): Metadata {
   return {
     title: siteName,
-    description: '影视聚合',
+    description: '全球影视资源',
     manifest: '/manifest.json',
     icons: {
       icon: [
