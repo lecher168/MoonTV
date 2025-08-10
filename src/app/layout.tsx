@@ -181,23 +181,18 @@ export default async function RootLayout({
             {children}
             <GlobalErrorIndicator />
           </SiteProvider>
-          <div className="fixed bottom-4 right-4 z-50">
-            <a
-              href="https://sezheai.com"
-              className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-[#5e60ce] to-[#4361ee] hover:from-[#4e50c0] hover:to-[#3a56e0] text-white font-medium rounded-lg transition-all duration-300 transform scale-90 hover:scale-95"
-              target="_blank"
-              rel="noopener"
-            >
-              <img
-                src="/favicon-48x48.ico"
-                alt="色者AI"
-                className="w-5 h-5 mr-2"
-              />
-              <span>更多学习分享：@色者AI</span>
-            </a>
-          </div>
-        </ThemeProvider>
-      </body>
-    </html>
-  );
-}
+         <div className="fixed top-4 right-4 z-50">
+  <a
+    href="https://sezheai.com"
+    className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-[#5e60ce] to-[#4361ee] hover:from-[#4e50c0] hover:to-[#3a56e0] text-white font-medium rounded-lg transition-all duration-300 transform scale-90 hover:scale-95"
+    target="_blank"
+    rel="noopener"
+  >
+    <img
+      src="/favicon-48x48.ico"
+      alt="色者AI"
+      className="w-5 h-5 mr-2"
+    />
+    <span>更多学习分享：@色者AI</span>
+  </a>
+</div>
