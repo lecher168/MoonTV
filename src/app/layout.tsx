@@ -181,7 +181,7 @@ export default async function RootLayout({
             {children}
             <GlobalErrorIndicator />
           </SiteProvider>
-          <div className="fixed top-4 right-4 z-50">
+          <div className="fixed right-4 z-50" style={{ bottom: 'calc(1.5cm + 1rem)' }}>
             <a
               href="https://sezheai.com"
               className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-[#5e60ce] to-[#4361ee] hover:from-[#4e50c0] hover:to-[#3a56e0] text-white font-medium rounded-lg transition-all duration-300 transform scale-90 hover:scale-95"
