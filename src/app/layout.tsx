@@ -113,7 +113,6 @@ export default async function RootLayout({
     siteName,
     announcement,
     enableRegister,
-    imageProxy,
     doubanProxy,
     disableYellowFilter,
     customCategories
@@ -122,7 +121,7 @@ export default async function RootLayout({
   const runtimeConfig = {
     STORAGE_TYPE: process.env.NEXT_PUBLIC_STORAGE_TYPE || 'localstorage',
     ENABLE_REGISTER: enableRegister,
-    IMAGE_PROXY: imageProxy,
+    IMAGE_PROXY: '', // 核心改动：服务器传递空，彻底抹除前端干扰
     DOUBAN_PROXY: doubanProxy,
     DISABLE_YELLOW_FILTER: disableYellowFilter,
     CUSTOM_CATEGORIES: customCategories,
@@ -136,62 +135,70 @@ export default async function RootLayout({
           content='width=device-width, initial-scale=1.0, viewport-fit=cover'
         />
         
-        {/* 核心强破防盗链头 */}
+        {/* 底层核心解封 Referrer 机制（100%穿透豆瓣防盗链） */}
         <meta name="referrer" content="no-referrer" />
 
-        {/* 纯前端免打包干预脚本：100%编译通过，运行时自动劫持 */}
+        {/* 全网最霸道DOM图片全自动劫持直连引擎 */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                function fixSingleImg(img) {
-                  if (!img || img.dataset.sweetFixed) return;
+                // 劫持数据清洗的核心函数
+                function performHijack(img) {
+                  if (!img || img.dataset.sweetOk) return;
                   
-                  var fields = ['src', 'data-src', 'data-original'];
-                  fields.forEach(function(f) {
-                    var v = img.getAttribute(f);
-                    if (v && !v.startsWith('data:')) {
-                      // 1. 剔除本地意外叠加的错乱域名前缀
-                      var clean = v.replace(/^(https?:\\/\\/)?(localhost|127\\.0\\.0\\.1|szai\\.us\\.kg)[^/]*\\//, '');
+                  // MoonTV所使用的所有图片存储字段
+                  var attrs = ['src', 'data-src', 'data-original'];
+                  attrs.forEach(function(f) {
+                    var val = img.getAttribute(f);
+                    // 排除 data: image 和 已经被处理过的 WP 链接
+                    if (val && !val.startsWith('data:') && !val.includes('i0.wp.com')) {
+                      
+                      // 1. 干净地提取出纯净的资源网址（剔除干扰的本地叠加主域）
+                      var clean = val.replace(/^(https?:\\/\\/)?(localhost|127\\.0\\.0\\.1|szai\\.us\\.kg)[^/]*\\//, '');
+                      // 2. 补齐缺失协议头
                       if (clean.startsWith('//')) clean = 'https:' + clean;
-                      if (!clean.startsWith('http') && clean.length > 4) clean = 'https://' + clean;
+                      if (!clean.startsWith('http') && clean.length > 5) clean = 'https://' + clean;
 
-                      // 2. 将防盗链的豆瓣链接无缝重定向到WordPress国内秒开节点
-                      if (clean.includes('doubanio.com') && !clean.includes('i0.wp.com')) {
-                        clean = 'https://i0.wp.com/' + clean.replace(/^https?:\\/\\//, '');
+                      // 3. 终极逻辑：只要不合 WP 直连的豆瓣、或残留干扰链接，统统直连 WP 节点
+                      var finalUrl = clean;
+                      if (clean.includes('doubanio.com')) {
+                        finalUrl = 'https://i0.wp.com/' + clean.replace(/^https?:\\/\\//, '');
                       } else if (clean.includes('weserv.nl')) {
-                        // 如果遇到了卡死的weserv代理，自动解包并交由大厂节点加速
+                        // 如果遇到了瘫痪的weserv，自动解包并由大厂直连直享
                         var p = clean.split('url=')[1];
-                        if (p) clean = 'https://i0.wp.com/' + decodeURIComponent(p).replace(/^https?:\\/\\//, '');
+                        if (p) finalUrl = 'https://i0.wp.com/' + decodeURIComponent(p).replace(/^https?:\\/\\//, '');
                       }
 
-                      if (img.getAttribute(f) !== clean) {
-                        img.setAttribute(f, clean);
+                      if (img.getAttribute(f) !== finalUrl) {
+                        img.setAttribute(f, finalUrl);
+                        // 彻底锁死，防止本地设置再次篡改
+                        if (f === 'src') img.dataset.sweetOk = 'true';
                       }
                     }
                   });
-                  img.dataset.sweetFixed = 'true';
                 }
 
-                // 加载失败二次兜底中转
+                // 加载失败二次兜底（100%对冲所有灰色块）
                 document.addEventListener('error', function (e) {
-                  var t = e.target;
-                  if (t.tagName.toLowerCase() === 'img' && !t.dataset.retryOk) {
-                    t.dataset.retryOk = 'true';
-                    var current = t.src;
-                    if (current && !current.startsWith('data:')) {
-                      t.src = 'https://i0.wp.com/' + current.replace(/^https?:\\/\\//, '').replace(/^(https?:\\/\\/)?(localhost|127\\.0\\.0\\.1|szai\\.us\\.kg)[^/]*\\//, '');
+                  var target = e.target;
+                  if (target.tagName.toLowerCase() === 'img' && !target.dataset.fallbackTriggered) {
+                    target.dataset.fallbackTriggered = 'true';
+                    var c = target.src;
+                    if (c && !c.startsWith('data:')) {
+                      // 剔除干扰叠加直接中转
+                      target.src = 'https://i0.wp.com/' + c.replace(/^(https?:\\/\\/)?(localhost|127\\.0\\.0\\.1|szai\\.us\\.kg)[^/]*\\//, '').replace(/^https?:\\/\\//, '');
                     }
                   }
                 }, true);
 
-                // 全自动化巡逻高频渲染引擎
+                // 每 100 毫秒高频穿透 DOM 树，点亮所有影视方块
                 setInterval(function() {
-                  var allImgs = document.getElementsByTagName('img');
-                  for (var i = 0; i < allImgs.length; i++) {
-                    fixSingleImg(allImgs[i]);
+                  var all = document.getElementsByTagName('img');
+                  for (var i = 0; i < all.length; i++) {
+                    performHijack(all[i]);
                   }
-                }, 200);
+                }, 100);
               })();
             `,
           }}
