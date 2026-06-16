@@ -6,7 +6,7 @@ const SiteContext = createContext<{ siteName: string; announcement?: string }>({
   // 默认值
   siteName: '可搭建你的私人影院',
   announcement:
-    '本项目为：粉丝群团体、公司员工、家族成员、村组及小区等...福利开发，价格低廉。项目咨询合作：@色者AI。',
+    '本项目为：粉丝群团体、公司员工、家族成员、村组及小区等...福利开发，价格低廉。项目咨询合作：@棒棒糖AI。',
 });
 
 export const useSite = () => useContext(SiteContext);
