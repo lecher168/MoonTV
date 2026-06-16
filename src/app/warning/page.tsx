@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: '安全警告 - 色者AI',
+  title: '安全警告 - 棒棒糖AI',
   description: '站点安全配置警告',
 };
 
