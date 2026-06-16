@@ -113,7 +113,6 @@ export default async function RootLayout({
       };
     } catch (error) {
       console.error('Failed to load config:', error);
-      // 使用默认配置，不做其他处理
     }
   } else {
     // 处理RuntimeConfig
@@ -135,13 +134,6 @@ export default async function RootLayout({
     customCategories
   } = configValues;
 
-  // 安全数值处理（避免除以零错误）
-  const safeNumericalValue = (value: number, fallback = 1) => 
-    value === 0 ? fallback : value;
-
-  // 示例：安全数值使用
-  const someValue = safeNumericalValue(0); // 返回1而不是0
-
   const runtimeConfig = {
     STORAGE_TYPE: process.env.NEXT_PUBLIC_STORAGE_TYPE || 'localstorage',
     ENABLE_REGISTER: enableRegister,
@@ -158,53 +150,70 @@ export default async function RootLayout({
           name='viewport'
           content='width=device-width, initial-scale=1.0, viewport-fit=cover'
         />
-        {/* 前端强制关闭 Referrer */}
+        
+        {/* 核心强破防盗链核心头：直接让整个网页内所有第三方请求隐匿来源头 */}
         <meta name="referrer" content="no-referrer" />
+        <meta name="referrer" content="same-origin" />
+        <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
 
-        {/* 海报全亮终极补丁：支持拦截错误与强力穿透懒加载缓存 */}
+        {/* 终极高能图片重定向脚本 */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              // 1. 报错拦截（处理加载失败的图）
-              document.addEventListener('error', function (e) {
-                var target = e.target;
-                if (target.tagName.toLowerCase() === 'img' && !target.dataset.fixed) {
-                  fixImg(target);
+              (function() {
+                // 自动纠正非标准路径并强破豆瓣限制
+                function fixImgElement(img) {
+                  if (!img || img.dataset.ultimateFixed) return;
+                  
+                  // 处理懒加载属性
+                  var attrs = ['src', 'data-src', 'data-original'];
+                  attrs.forEach(function(attr) {
+                    var currentVal = img.getAttribute(attr);
+                    if (currentVal && !currentVal.startsWith('data:')) {
+                      // 移除可能意外拼在最前面的本地主域名
+                      var clean = currentVal.replace(/^(https?:\\/\\/)?(localhost|127\\.0\\.0\\.1|szai\\.us\\.kg)[^/]*\\//, '');
+                      
+                      // 补齐相对路径协议头
+                      if (clean.startsWith('//')) {
+                        clean = 'https:' + clean;
+                      } else if (!clean.startsWith('http') && clean.length > 5) {
+                        clean = 'https://' + clean;
+                      }
+                      
+                      // 如果域名是豆瓣，利用 WordPress 公共高宽容度图片节点中转（100%穿透防盗链且不缩放）
+                      if (clean.includes('doubanio.com') && !clean.includes('i0.wp.com')) {
+                        clean = 'https://i0.wp.com/' + clean.replace(/^https?:\\/\\//, '');
+                      }
+                      
+                      if (img.getAttribute(attr) !== clean) {
+                        img.setAttribute(attr, clean);
+                      }
+                    }
+                  });
+                  img.dataset.ultimateFixed = 'true';
                 }
-              }, true);
 
-              // 2. 强力巡逻（每隔半秒扫描一次页面，提前拦截还没开始加载的灰色块懒加载网址）
-              setInterval(function () {
-                var imgs = document.getElementsByTagName('img');
-                for (var i = 0; i < imgs.length; i++) {
-                  var img = imgs[i];
-                  // 如果有隐藏的懒加载真实属性，提前把它也加上代理
-                  if (img.getAttribute('data-src') && !img.getAttribute('data-src').includes('images.weserv.nl')) {
-                    img.setAttribute('data-src', 'https://images.weserv.nl/?url=' + encodeURIComponent(cleanSrc(img.getAttribute('data-src'))));
+                // 监听全局加载失败，进行终极备用代理替换
+                document.addEventListener('error', function (e) {
+                  var target = e.target;
+                  if (target.tagName.toLowerCase() === 'img' && !target.dataset.fallbackTriggered) {
+                    target.dataset.fallbackTriggered = 'true';
+                    var currentSrc = target.src;
+                    if (currentSrc && !currentSrc.startsWith('data:')) {
+                      // 最后的绝招：改用海外极速节点中转
+                      target.src = 'https://images.weserv.nl/?url=' + encodeURIComponent(currentSrc);
+                    }
                   }
-                  if (img.getAttribute('data-original') && !img.getAttribute('data-original').includes('images.weserv.nl')) {
-                    img.setAttribute('data-original', 'https://images.weserv.nl/?url=' + encodeURIComponent(cleanSrc(img.getAttribute('data-original'))));
-                  }
-                  // 如果当前显示的src已经暴露且没加代理，直接强行洗白
-                  if (img.src && !img.src.includes('images.weserv.nl') && !img.dataset.fixed && !img.src.startsWith('data:')) {
-                    fixImg(img);
-                  }
-                }
-              }, 500);
+                }, true);
 
-              function cleanSrc(src) {
-                return src.replace(/^(https?:\\/\\/)?(localhost|127\\.0\\.0\\.1|szai\\.us\\.kg)[^/]*\\//, '');
-              }
-
-              function fixImg(target) {
-                var oldSrc = target.src;
-                target.dataset.fixed = 'true';
-                var cleanUrl = cleanSrc(oldSrc);
-                if (!cleanUrl.startsWith('http')) {
-                  cleanUrl = 'https://' + cleanUrl;
-                }
-                target.src = 'https://images.weserv.nl/?url=' + encodeURIComponent(cleanUrl);
-              }
+                // 每 200 毫秒高频穿透 DOM 树，点亮所有影视方块
+                setInterval(function () {
+                  var imgs = document.getElementsByTagName('img');
+                  for (var i = 0; i < imgs.length; i++) {
+                    fixImgElement(imgs[i]);
+                  }
+                }, 200);
+              })();
             `,
           }}
         />
