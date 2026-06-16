@@ -366,7 +366,7 @@ export class RedisStorage implements IStorage {
 
 // 单例 Redis 客户端
 function getRedisClient(): RedisClientType {
-  const globalKey = Symbol.for('__色者AI_REDIS_CLIENT__');
+  const globalKey = Symbol.for('__棒棒糖AI_REDIS_CLIENT__');
   let client: RedisClientType | undefined = (global as any)[globalKey];
 
   if (!client) {
