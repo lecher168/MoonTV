@@ -1,10 +1,10 @@
-# 色者AI
+# 棒棒糖AI
 
 <div align="center">
   <img src="public/logo.png" alt="LibreTV Logo" width="120">
 </div>
 
-> 🎬 **色者AI** 是一个开箱即用的、跨平台的影视聚合播放器。它基于 **Next.js 14** + **Tailwind&nbsp;CSS** + **TypeScript** 构建，支持多资源搜索、在线播放、收藏同步、播放记录、本地/云端存储，让你可以随时随地畅享海量免费影视内容。
+> 🎬 **棒棒糖AI** 是一个开箱即用的、跨平台的影视聚合播放器。它基于 **Next.js 14** + **Tailwind&nbsp;CSS** + **TypeScript** 构建，支持多资源搜索、在线播放、收藏同步、播放记录、本地/云端存储，让你可以随时随地畅享海量免费影视内容。
 
 <div align="center">
 
@@ -266,7 +266,7 @@ custom_category 支持的自定义分类已知如下：
 
 也可输入如 "哈利波特" 效果等同于豆瓣搜索
 
-色者AI 支持标准的苹果 CMS V10 API 格式。
+棒棒糖AI 支持标准的苹果 CMS V10 API 格式。
 
 修改后 **无需重新构建**，服务会在启动时读取一次。
 
@@ -317,7 +317,7 @@ custom_category 支持的自定义分类已知如下：
 
 ## License
 
-[MIT](LICENSE) © 2025 色者AI & Contributors
+[MIT](LICENSE) © 2025 棒棒糖AI & Contributors
 
 ## 致谢
 
