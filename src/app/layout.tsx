@@ -32,7 +32,7 @@ interface RuntimeConfigType {
 
 // 获取默认配置
 const getDefaultConfig = () => ({
-  siteName: process.env.SITE_NAME || '色者AI私人影院',
+  siteName: process.env.SITE_NAME || '棒棒糖AI私人影院',
   announcement: process.env.ANNOUNCEMENT || '无偿对粉丝免费观看，影视内容均采集全球第3方开放接口资源，观影中出现广告切勿相信，与本站无关，同时遵循相关法律，切勿下载、传播、售卖如触犯自行承担。',
   enableRegister: process.env.NEXT_PUBLIC_ENABLE_REGISTER === 'true',
   imageProxy: process.env.NEXT_PUBLIC_IMAGE_PROXY || '',
@@ -190,10 +190,10 @@ export default async function RootLayout({
             >
               <img
                 src="/favicon-48x48.ico"
-                alt="色者AI"
+                alt="棒棒糖AI"
                 className="w-5 h-5 mr-2"
               />
-              <span>更多学习分享：@色者AI</span>
+              <span>更多学习分享：@棒棒糖AI</span>
             </a>
           </div>
         </ThemeProvider>
