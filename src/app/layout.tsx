@@ -158,10 +158,60 @@ export default async function RootLayout({
           name='viewport'
           content='width=device-width, initial-scale=1.0, viewport-fit=cover'
         />
+        {/* 前端强制关闭 Referrer */}
+        <meta name="referrer" content="no-referrer" />
+
+        {/* 海报全亮终极补丁：支持拦截错误与强力穿透懒加载缓存 */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // 1. 报错拦截（处理加载失败的图）
+              document.addEventListener('error', function (e) {
+                var target = e.target;
+                if (target.tagName.toLowerCase() === 'img' && !target.dataset.fixed) {
+                  fixImg(target);
+                }
+              }, true);
+
+              // 2. 强力巡逻（每隔半秒扫描一次页面，提前拦截还没开始加载的灰色块懒加载网址）
+              setInterval(function () {
+                var imgs = document.getElementsByTagName('img');
+                for (var i = 0; i < imgs.length; i++) {
+                  var img = imgs[i];
+                  // 如果有隐藏的懒加载真实属性，提前把它也加上代理
+                  if (img.getAttribute('data-src') && !img.getAttribute('data-src').includes('images.weserv.nl')) {
+                    img.setAttribute('data-src', 'https://images.weserv.nl/?url=' + encodeURIComponent(cleanSrc(img.getAttribute('data-src'))));
+                  }
+                  if (img.getAttribute('data-original') && !img.getAttribute('data-original').includes('images.weserv.nl')) {
+                    img.setAttribute('data-original', 'https://images.weserv.nl/?url=' + encodeURIComponent(cleanSrc(img.getAttribute('data-original'))));
+                  }
+                  // 如果当前显示的src已经暴露且没加代理，直接强行洗白
+                  if (img.src && !img.src.includes('images.weserv.nl') && !img.dataset.fixed && !img.src.startsWith('data:')) {
+                    fixImg(img);
+                  }
+                }
+              }, 500);
+
+              function cleanSrc(src) {
+                return src.replace(/^(https?:\\/\\/)?(localhost|127\\.0\\.0\\.1|szai\\.us\\.kg)[^/]*\\//, '');
+              }
+
+              function fixImg(target) {
+                var oldSrc = target.src;
+                target.dataset.fixed = 'true';
+                var cleanUrl = cleanSrc(oldSrc);
+                if (!cleanUrl.startsWith('http')) {
+                  cleanUrl = 'https://' + cleanUrl;
+                }
+                target.src = 'https://images.weserv.nl/?url=' + encodeURIComponent(cleanUrl);
+              }
+            `,
+          }}
+        />
+
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        
         <script
           dangerouslySetInnerHTML={{
             __html: `window.RUNTIME_CONFIG = ${JSON.stringify(runtimeConfig)};`,
